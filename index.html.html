@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hari Artz</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&family=Jost:wght@400;500;600&family=Cinzel+Decorative:wght@700;900&display=swap');
+
+:root{
+  --bg: #0A0908;
+  --bg-2: #141210;
+  --card: #161310;
+  --gold: #C9A227;
+  --gold-bright: #E8C766;
+  --cream: #EFE6CC;
+  --dim: #A89A78;
+  --dot: rgba(201,162,39,0.16);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  min-height:100vh;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-attachment: fixed;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+a{color:inherit;}
+
+header{
+  position: sticky;
+  top:0;
+  z-index: 50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 16px 28px;
+  background: rgba(10,9,8,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--gold);
+}
+
+.logo-stamp{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  background:none;
+  border:none;
+}
+
+.stamp-badge{
+  width:48px;
+  height:48px;
+  border: 1.5px solid var(--gold);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Great Vibes', cursive;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing:0.5px;
+  background: linear-gradient(160deg, #1b1712, #0a0908);
+  color: var(--gold-bright);
+  box-shadow: 0 0 0 1px rgba(201,162,39,0.25), 0 0 14px rgba(201,162,39,0.25);
+}
+
+.logo-word{
+  font-family:'Great Vibes', cursive;
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: 1px;
+  color: var(--gold-bright);
+  text-transform: none;
+}
+
+nav{
+  display:flex;
+  align-items:center;
+  gap: 6px;
+}
+
+.tab-btn{
+  font-family:'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--cream);
+  transition: transform .12s ease, background .12s ease, color .12s ease;
+}
+.tab-btn:hover{ transform: translateY(-2px); border-color: var(--gold-bright); }
+.tab-btn.active{
+  background: var(--gold);
+  color: #14110A;
+  border-color: var(--gold);
+}
+
+.lock-btn{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: var(--bg-2);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-left: 4px;
+  font-size:16px;
+  color: var(--gold-bright);
+}
+.lock-btn:focus-visible, .tab-btn:focus-visible, .logo-stamp:focus-visible{
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
+}
+
+.hero{
+  position:relative;
+  padding: 74px 28px 30px;
+  overflow:hidden;
+}
+.hero-inner{
+  max-width: 900px;
+  margin: 0 auto;
+  text-align:center;
+}
+.hero-eyebrow{
+  font-family:'Jost', sans-serif;
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  display:inline-block;
+  margin-bottom: 14px;
+}
+.hero h1{
+  font-family:'Cinzel Decorative', serif;
+  font-weight: 900;
+  font-size: clamp(40px, 9vw, 90px);
+  line-height: 1.05;
+  letter-spacing: 2px;
+  color: var(--cream);
+  text-shadow: 0 0 24px rgba(201,162,39,0.35);
+}
+.hero h1 span{
+  color: var(--gold-bright);
+}
+
+.hero p{
+  max-width: 520px;
+  margin: 20px auto 0;
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.contact-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 12px;
+  justify-content:center;
+  margin-top: 30px;
+}
+
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-decoration:none;
+  background: var(--bg-2);
+  color: var(--cream);
+  transition: transform .12s ease, background .12s ease;
+}
+.pill:hover{ transform: translateY(-2px); }
+.pill.solid{
+  background: linear-gradient(120deg, var(--gold), var(--gold-bright));
+  color: #14110A;
+  border-color: var(--gold-bright);
+  font-weight: 600;
+}
+
+.quote-section{
+  max-width: 760px;
+  margin: 40px auto 10px;
+  padding: 20px 28px 10px;
+  text-align: center;
+  position: relative;
+}
+.quote-rule{
+  width: 70px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0 auto 26px;
+}
+.quote-text{
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(30px, 5.5vw, 46px);
+  line-height: 1.4;
+  color: var(--gold-bright);
+  font-weight: 400;
+}
+
+.gallery-wrap{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 28px 90px;
+}
+
+.section-label{
+  font-family:'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 1px;
+  display:inline-block;
+  color: var(--gold-bright);
+  padding-bottom: 8px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--gold);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 26px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid rgba(201,162,39,0.4);
+  padding: 12px 12px 16px;
+  position:relative;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.card:hover{ transform: translateY(-4px); border-color: var(--gold-bright); }
+
+.tape{
+  position:absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 64px;
+  height: 18px;
+  background: rgba(201,162,39,0.5);
+  border: 1px solid rgba(201,162,39,0.6);
+}
+
+.card img{
+  width:100%;
+  height: 190px;
+  object-fit: cover;
+  display:block;
+  border: 1px solid rgba(201,162,39,0.3);
+}
+
+.card .caption{
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--cream);
+}
+
+.card .meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top: 10px;
+}
+
+.card .date{
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.del-btn{
+  background: none;
+  border: none;
+  color: var(--gold-bright);
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor:pointer;
+  text-decoration: underline;
+}
+
+.empty-state{
+  font-family:'Great Vibes', cursive;
+  font-size: 26px;
+  color: var(--dim);
+  padding: 40px 0;
+  text-align:center;
+}
+
+.overlay{
+  position: fixed;
+  inset:0;
+  background: rgba(0,0,0,0.75);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index: 100;
+  padding: 20px;
+}
+.hidden{ display:none; }
+
+.modal{
+  background: var(--bg-2);
+  border: 1px solid var(--gold);
+  max-width: 420px;
+  width:100%;
+  padding: 30px;
+  box-shadow: 0 0 30px rgba(201,162,39,0.15);
+}
+
+.modal h2{
+  font-family:'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+  color: var(--gold-bright);
+}
+
+.field{ margin-bottom: 16px; }
+.field label{
+  display:block;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  color: var(--dim);
+}
+.field input[type=password],
+.field input[type=text],
+.field select,
+.field textarea{
+  width:100%;
+  padding: 11px 12px;
+  border: 1px solid rgba(201,162,39,0.5);
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+}
+.field select{ font-family: 'Jost', sans-serif; font-size: 14px; }
+.field textarea{ resize: vertical; min-height: 70px; }
+
+.field input[type=file]{
+  width:100%;
+  font-size: 13px;
+  font-family: 'Jost', sans-serif;
+  color: var(--dim);
+}
+
+.modal-actions{
+  display:flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn{
+  font-family:'Jost', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px 22px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(120deg, var(--gold), var(--gold-bright));
+  color: #14110A;
+  cursor:pointer;
+  flex:1;
+}
+.btn.secondary{
+  background: transparent;
+  color: var(--cream);
+  border-color: rgba(201,162,39,0.5);
+}
+.btn:focus-visible{ outline: 2px solid var(--gold-bright); outline-offset:2px; }
+
+.error-msg{
+  color: #E88A7A;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  min-height: 16px;
+}
+
+.shake{ animation: shake .3s; }
+@keyframes shake{
+  0%,100%{ transform: translateX(0); }
+  25%{ transform: translateX(-6px); }
+  75%{ transform: translateX(6px); }
+}
+
+.unlocked-badge{
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--gold);
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
+footer{
+  text-align:center;
+  padding: 34px 20px 44px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--dim);
+  border-top: 1px solid var(--gold);
+}
+footer a{ text-decoration: underline; color: var(--gold-bright); }
+
+@media (max-width: 640px){
+  header{ padding: 12px 16px; }
+  .logo-word{ display:none; }
+  nav{ gap: 4px; }
+  .tab-btn{ font-size: 11px; padding: 7px 12px; }
+  .hero{ padding: 46px 16px 24px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+
+<header>
+  <button class="logo-stamp" id="logoBtn" aria-label="Hari Artz home">
+    <span class="stamp-badge">HA</span>
+    <span class="logo-word">HariArtz</span>
+  </button>
+  <nav>
+    <button class="tab-btn active" data-cat="anime" id="tabAnime">Anime</button>
+    <button class="tab-btn" data-cat="artz" id="tabArtz">Hari Artz</button>
+    <button class="lock-btn" id="lockBtn" aria-label="Upload a post" title="Upload">🔒</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Sketchbook &amp; Anime Corner</span>
+    <h1>Hari<br><span>Artz</span></h1>
+    <p>Original artwork and anime fan posts, drawn, inked, and posted one page at a time.</p>
+    <div class="contact-row">
+      <a class="pill" href="https://instagram.com/hari_.official_.2007" target="_blank" rel="noopener">📸 @hari_.official_.2007</a>
+      <a class="pill solid" id="mailBtn" href="mailto:hariartzstudio@gmail.com">✉ Mail me</a>
+      <span id="mailCopiedMsg" style="display:none; font-family:'Jost',sans-serif; font-size:12px; color:var(--gold-bright); align-self:center;">Email copied — hariartzstudio@gmail.com</span>
+    </div>
+  </div>
+</section>
+
+<div class="quote-section">
+  <div class="quote-rule"></div>
+  <p class="quote-text">Life is a Canvas, if you're a master, you can create a Masterpiece.</p>
+</div>
+
+<div class="quote-section" id="contactSection" style="max-width:480px; margin-top:60px;">
+  <span class="section-label" style="margin-bottom:20px;">Get In Touch</span>
+  <form id="contactForm" style="text-align:left; margin-top:10px;">
+    <div class="field">
+      <label for="cfName">Name</label>
+      <input type="text" id="cfName" name="name" required placeholder="Your name">
+    </div>
+    <div class="field">
+      <label for="cfEmail">Email</label>
+      <input type="text" id="cfEmail" name="email" required placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label for="cfMessage">Message</label>
+      <textarea id="cfMessage" name="message" required placeholder="Say hello, ask a question, request a commission..."></textarea>
+    </div>
+    <div class="error-msg" id="cfStatus"></div>
+    <button type="submit" class="btn" id="cfSubmit" style="width:100%;">Send Message</button>
+  </form>
+</div>
+
+<div class="gallery-wrap">
+  <span class="section-label" id="sectionLabel">Anime Posts</span>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  <span class="stamp-badge" style="display:inline-flex; vertical-align:middle; width:30px;height:30px;font-size:12px;">HA</span>
+  &nbsp; Hari Artz &nbsp;·&nbsp;
+  <a href="https://instagram.com/hari_.official_.2007" target="_blank" rel="noopener">Instagram</a> &nbsp;·&nbsp;
+  <a href="mailto:hariartzstudio@gmail.com">Email</a>
+  &nbsp;·&nbsp; © 2026
+</footer>
+
+<div class="overlay hidden" id="lockOverlay">
+  <div class="modal" id="lockModal">
+    <h2>Unlock uploads</h2>
+    <div class="field">
+      <label for="passkeyInput">Passkey</label>
+      <input type="password" id="passkeyInput" placeholder="Enter your passkey">
+    </div>
+    <div class="error-msg" id="lockError"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="lockCancel">Cancel</button>
+      <button class="btn" id="lockSubmit">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="uploadOverlay">
+  <div class="modal">
+    <h2>New post <span class="unlocked-badge">● unlocked</span></h2>
+    <div class="field">
+      <label for="catSelect">Category</label>
+      <select id="catSelect">
+        <option value="anime">Anime</option>
+        <option value="artz">Hari Artz</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="imgInput">Image</label>
+      <input type="file" id="imgInput" accept="image/*">
+    </div>
+    <div class="field">
+      <label for="capInput">Caption</label>
+      <textarea id="capInput" placeholder="Say something about this piece..."></textarea>
+    </div>
+    <div class="error-msg" id="uploadError"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="uploadCancel">Cancel</button>
+      <button class="btn" id="uploadSubmit">Post</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="lightboxOverlay">
+  <button id="lightboxClose" aria-label="Close" style="position:absolute; top:24px; right:32px; background:none; border:1px solid var(--gold); color:var(--gold-bright); width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer;">✕</button>
+  <div style="max-width:90vw; max-height:88vh; text-align:center;">
+    <img id="lightboxImg" src="" alt="" style="max-width:90vw; max-height:75vh; border:1px solid var(--gold); object-fit:contain;">
+    <p id="lightboxCaption" style="font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--cream); margin-top:16px;"></p>
+  </div>
+</div>
+
+<script>
+const PASSKEY = "hariartzstudio@2007";
+const SUPABASE_URL = "https://jtvrlpyieshobkkhfrwi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_3z-ZSkXNDM497O_SQjiAmA_L6S_dtCl";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const BUCKET = "post-images";
+let posts = [];
+let activeCat = "anime";
+let unlocked = false;
+
+const grid = document.getElementById('grid');
+const sectionLabel = document.getElementById('sectionLabel');
+const tabAnime = document.getElementById('tabAnime');
+const tabArtz = document.getElementById('tabArtz');
+const lockBtn = document.getElementById('lockBtn');
+
+const lockOverlay = document.getElementById('lockOverlay');
+const passkeyInput = document.getElementById('passkeyInput');
+const lockError = document.getElementById('lockError');
+const lockModal = document.getElementById('lockModal');
+
+const uploadOverlay = document.getElementById('uploadOverlay');
+const catSelect = document.getElementById('catSelect');
+const imgInput = document.getElementById('imgInput');
+const capInput = document.getElementById('capInput');
+const uploadError = document.getElementById('uploadError');
+
+async function loadPosts(){
+  try{
+    const { data, error } = await supabaseClient
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if(error) throw error;
+    posts = data || [];
+    render();
+  }catch(e){
+    const msg = (e && (e.message || e.error_description || e.hint)) || JSON.stringify(e);
+    console.error('Load error:', msg, e);
+    grid.innerHTML = `<div class="empty-state" style="font-family:'Jost',sans-serif; font-size:14px; color:#E88A7A;">Could not load posts: ${escapeHtml(msg)}</div>`;
+  }
+}
+
+function fmtDate(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+}
+
+function render(){
+  grid.innerHTML = '';
+  const filtered = posts.filter(p => p.category === activeCat);
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty-state">Nothing posted here yet — check back soon.</div>';
+    return;
+  }
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="tape"></div>
+      <img src="${p.image_url}" alt="${escapeHtml(p.caption || 'artwork')}" style="cursor:zoom-in" data-fullimg="${p.image_url}" data-fullcap="${escapeHtml(p.caption || '')}">
+      <div class="caption">${escapeHtml(p.caption || '')}</div>
+      <div class="meta">
+        <span class="date">${fmtDate(p.created_at)}</span>
+        ${unlocked ? `<button class="del-btn" data-id="${p.id}">delete</button>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('img[data-fullimg]').forEach(imgEl => {
+    imgEl.addEventListener('click', () => {
+      document.getElementById('lightboxImg').src = imgEl.getAttribute('data-fullimg');
+      document.getElementById('lightboxCaption').textContent = imgEl.getAttribute('data-fullcap');
+      document.getElementById('lightboxOverlay').classList.remove('hidden');
+    });
+  });
+
+  if(unlocked){
+    grid.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        try{
+          const { error } = await supabaseClient.from('posts').delete().eq('id', id);
+          if(error) throw error;
+          posts = posts.filter(p => String(p.id) !== String(id));
+          render();
+        }catch(e){
+          console.error('Delete error', e);
+        }
+      });
+    });
+  }
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function setActiveTab(cat){
+  activeCat = cat;
+  tabAnime.classList.toggle('active', cat === 'anime');
+  tabArtz.classList.toggle('active', cat === 'artz');
+  sectionLabel.textContent = cat === 'anime' ? 'Anime Posts' : 'Hari Artz';
+  render();
+}
+
+tabAnime.addEventListener('click', () => setActiveTab('anime'));
+tabArtz.addEventListener('click', () => setActiveTab('artz'));
+document.getElementById('logoBtn').addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+lockBtn.addEventListener('click', () => {
+  if(unlocked){
+    uploadOverlay.classList.remove('hidden');
+  }else{
+    lockOverlay.classList.remove('hidden');
+    passkeyInput.value = '';
+    lockError.textContent = '';
+    passkeyInput.focus();
+  }
+});
+
+document.getElementById('lockCancel').addEventListener('click', () => lockOverlay.classList.add('hidden'));
+lockOverlay.addEventListener('click', (e) => { if(e.target === lockOverlay) lockOverlay.classList.add('hidden'); });
+
+document.getElementById('lockSubmit').addEventListener('click', tryUnlock);
+passkeyInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryUnlock(); });
+
+function tryUnlock(){
+  if(passkeyInput.value === PASSKEY){
+    unlocked = true;
+    lockBtn.textContent = '🔓';
+    lockOverlay.classList.add('hidden');
+    uploadOverlay.classList.remove('hidden');
+    render();
+  }else{
+    lockError.textContent = 'Wrong passkey — try again.';
+    lockModal.classList.remove('shake');
+    void lockModal.offsetWidth;
+    lockModal.classList.add('shake');
+  }
+}
+
+document.getElementById('uploadCancel').addEventListener('click', () => uploadOverlay.classList.add('hidden'));
+uploadOverlay.addEventListener('click', (e) => { if(e.target === uploadOverlay) uploadOverlay.classList.add('hidden'); });
+
+function compressImage(file, maxDimension = 1600, quality = 0.82){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    reader.onerror = reject;
+    img.onload = () => {
+      let { width, height } = img;
+      if(width > maxDimension || height > maxDimension){
+        if(width > height){
+          height = Math.round(height * (maxDimension / width));
+          width = maxDimension;
+        }else{
+          width = Math.round(width * (maxDimension / height));
+          height = maxDimension;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => {
+        if(!blob){ reject(new Error('Compression failed')); return; }
+        resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('uploadSubmit').addEventListener('click', async () => {
+  uploadError.textContent = '';
+  const rawFile = imgInput.files[0];
+  const caption = capInput.value.trim();
+  const category = catSelect.value;
+  const submitBtn = document.getElementById('uploadSubmit');
+
+  if(!rawFile){
+    uploadError.textContent = 'Please choose an image.';
+    return;
+  }
+  if(rawFile.size > 12 * 1024 * 1024){
+    uploadError.textContent = 'Image is too large — please use one under 12MB.';
+    return;
+  }
+
+  submitBtn.textContent = 'Compressing...';
+  submitBtn.disabled = true;
+
+  try{
+    const file = await compressImage(rawFile);
+    submitBtn.textContent = 'Posting...';
+
+    const fileExt = 'jpg';
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+    const { error: uploadErr } = await supabaseClient
+      .storage
+      .from(BUCKET)
+      .upload(fileName, file);
+    if(uploadErr) throw uploadErr;
+
+    const { data: urlData } = supabaseClient
+      .storage
+      .from(BUCKET)
+      .getPublicUrl(fileName);
+
+    const { error: insertErr } = await supabaseClient
+      .from('posts')
+      .insert({ category, caption, image_url: urlData.publicUrl });
+    if(insertErr) throw insertErr;
+
+    imgInput.value = '';
+    capInput.value = '';
+    uploadOverlay.classList.add('hidden');
+    await loadPosts();
+    setActiveTab(category);
+  }catch(e){
+    const msg = (e && (e.message || e.error_description || e.hint || e.statusText)) || JSON.stringify(e);
+    console.error('Upload error:', msg, e);
+    uploadError.textContent = 'Error: ' + msg;
+  }finally{
+    submitBtn.textContent = 'Post';
+    submitBtn.disabled = false;
+  }
+});
+
+const mailBtn = document.getElementById('mailBtn');
+const mailCopiedMsg = document.getElementById('mailCopiedMsg');
+mailBtn.addEventListener('click', async (e) => {
+  try{
+    await navigator.clipboard.writeText('hariartzstudio@gmail.com');
+    mailCopiedMsg.style.display = 'inline';
+    setTimeout(() => { mailCopiedMsg.style.display = 'none'; }, 4000);
+  }catch(err){
+    // Clipboard not available, mailto link still attempts to open normally
+  }
+});
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightboxOverlay').classList.add('hidden');
+});
+document.getElementById('lightboxOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'lightboxOverlay') document.getElementById('lightboxOverlay').classList.add('hidden');
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') document.getElementById('lightboxOverlay').classList.add('hidden');
+});
+
+const contactForm = document.getElementById('contactForm');
+const cfStatus = document.getElementById('cfStatus');
+contactForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const cfSubmit = document.getElementById('cfSubmit');
+  cfStatus.textContent = '';
+  cfStatus.style.color = '#E88A7A';
+  cfSubmit.textContent = 'Sending...';
+  cfSubmit.disabled = true;
+
+  const payload = {
+    access_key: '05c71aed-6f07-4c0a-a945-f23a165dd870',
+    name: document.getElementById('cfName').value,
+    email: document.getElementById('cfEmail').value,
+    message: document.getElementById('cfMessage').value,
+    subject: 'New message from Hari Artz website'
+  };
+
+  try{
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    if(result.success){
+      cfStatus.style.color = 'var(--gold-bright)';
+      cfStatus.textContent = 'Message sent — thank you!';
+      contactForm.reset();
+    }else{
+      cfStatus.textContent = result.message || 'Something went wrong — please try again.';
+    }
+  }catch(err){
+    cfStatus.textContent = 'Network error — please try again.';
+  }finally{
+    cfSubmit.textContent = 'Send Message';
+    cfSubmit.disabled = false;
+  }
+});
+
+loadPosts();
+</script>
+
+</body>
+</html>
