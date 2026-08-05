@@ -571,6 +571,43 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
 }
 
+.download-box {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(201,162,39,0.15);
+  text-align: center;
+}
+.download-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+.download-btns {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.dl-btn {
+  background: rgba(201,162,39,0.08);
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.dl-btn:hover {
+  background: var(--gold);
+  color: #14110A;
+  box-shadow: 0 0 12px rgba(232,199,102,0.4);
+}
+
 
 
 
@@ -1162,15 +1199,13 @@ function render(){
         <span class="date">${fmtDate(p.created_at)}</span>
       </div>
 
-      ${activeCat === 'anime' ? `
-        <div class="download-box">
-          <div class="download-label">Download Post</div>
-          <div class="download-btns">
-            <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '1080p')">1080p</button>
-            <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '720p')">720p</button>
-          </div>
+      <div class="download-box">
+        <div class="download-label">Download Post</div>
+        <div class="download-btns">
+          <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '1080p')">1080p</button>
+          <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '720p')">720p</button>
         </div>
-      ` : ''}
+      </div>
 
       ${unlocked ? `
         <div class="meta" style="margin-top:10px; border-top:1px solid rgba(201,162,39,0.1); padding-top:8px;">
