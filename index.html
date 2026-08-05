@@ -1199,13 +1199,15 @@ function render(){
         <span class="date">${fmtDate(p.created_at)}</span>
       </div>
 
-      <div class="download-box">
-        <div class="download-label">Download Post</div>
-        <div class="download-btns">
-          <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '1080p')">1080p</button>
-          <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '720p')">720p</button>
+      ${activeCat === 'anime' ? `
+        <div class="download-box">
+          <div class="download-label">Download Post</div>
+          <div class="download-btns">
+            <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '1080p')">1080p</button>
+            <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '720p')">720p</button>
+          </div>
         </div>
-      </div>
+      ` : ''}
 
       ${unlocked ? `
         <div class="meta" style="margin-top:10px; border-top:1px solid rgba(201,162,39,0.1); padding-top:8px;">
