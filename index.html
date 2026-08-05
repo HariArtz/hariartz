@@ -511,6 +511,98 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   .tab-btn{ font-size: 11px; padding: 7px 12px; }
   .hero{ padding: 46px 16px 24px; }
 }
+
+/* --- New Features Styles --- */
+.search-container {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  border: 1px solid var(--gold);
+  background: var(--bg-2);
+  color: var(--cream);
+  border-radius: 999px;
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.search-bar:focus {
+  box-shadow: 0 0 15px rgba(201,162,39,0.3);
+  border-color: var(--gold-bright);
+}
+.like-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.like-btn {
+  background: none;
+  border: none;
+  color: var(--gold-bright);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Jost', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.like-btn:hover {
+  transform: scale(1.1);
+}
+.like-btn.animating {
+  animation: heartPop 0.45s ease-out;
+}
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); color: #ff4d4d; }
+  100% { transform: scale(1); }
+}
+.download-box {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid rgba(201,162,39,0.2);
+  padding-top: 10px;
+}
+.download-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.download-btns {
+  display: flex;
+  gap: 8px;
+}
+.dl-btn {
+  flex: 1;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold-bright);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.dl-btn:hover {
+  background: var(--gold);
+  color: var(--bg);
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -593,7 +685,11 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
 
 <div class="gallery-wrap">
   <span class="section-label" id="sectionLabel">Anime Posts</span>
-  <div class="grid" id="grid"></div>
+  
+    <div id="searchContainer" class="search-container hidden">
+      <input type="text" id="searchBar" class="search-bar" placeholder="Search anime by description...">
+    </div>
+    <div class="grid" id="grid"></div>
 </div>
 
 <footer>
@@ -668,6 +764,65 @@ const PASSKEY = "hariartzstudio@2007";
 const SUPABASE_URL = "https://jtvrlpyieshobkkhfrwi.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3z-ZSkXNDM497O_SQjiAmA_L6S_dtCl";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let searchQuery = '';
+
+function formatLikes(count) {
+  const n = count || 0;
+  if (n >= 1000000) return `❤️${(n / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (n >= 1000) return `❤️${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+  return `❤️${n}`;
+}
+
+async function handleLike(postId, currentLikes, btnEl) {
+  if (btnEl.classList.contains('animating')) return;
+  
+  const newLikes = (currentLikes || 0) + 1;
+  btnEl.classList.add('animating');
+  btnEl.innerHTML = formatLikes(newLikes);
+  
+  const post = posts.find(p => p.id === postId);
+  if (post) post.likes = newLikes;
+  
+  try {
+    const { error } = await supabaseClient
+      .from('posts')
+      .update({ likes: newLikes })
+      .eq('id', postId);
+    if (error) console.error('Supabase like error:', error);
+  } catch (err) {
+    console.error('Like error:', err);
+  }
+  
+  setTimeout(() => btnEl.classList.remove('animating'), 500);
+}
+
+function triggerDownload(url, quality) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  
+  let targetW = 1920;
+  let targetH = 1080;
+  if (quality === '720p') {
+    targetW = 1280;
+    targetH = 720;
+  }
+  
+  img.onload = () => {
+    const ratio = Math.min(targetW / img.width, targetH / img.height);
+    canvas.width = img.width * ratio;
+    canvas.height = img.height * ratio;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    const link = document.createElement('a');
+    link.download = `hariartz-${quality}-${Date.now()}.jpg`;
+    link.href = canvas.toDataURL('image/jpeg', 0.92);
+    link.click();
+  };
+  img.src = url;
+}
+
 const BUCKET = "post-images";
 let posts = [];
 let activeCat = "anime";
@@ -713,7 +868,24 @@ function fmtDate(ts){
 
 function render(){
   grid.innerHTML = '';
-  const filtered = posts.filter(p => p.category === activeCat);
+  
+  const searchContainer = document.getElementById('searchContainer');
+  if (activeCat === 'anime') {
+    searchContainer.classList.remove('hidden');
+  } else {
+    searchContainer.classList.add('hidden');
+    searchQuery = '';
+    const searchBar = document.getElementById('searchBar');
+    if(searchBar) searchBar.value = '';
+  }
+
+  let filtered = posts.filter(p => p.category === activeCat);
+  
+  if (activeCat === 'anime' && searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(p => (p.caption || '').toLowerCase().includes(q));
+  }
+
   if(filtered.length === 0){
     grid.innerHTML = '<div class="empty-state">Nothing posted here yet — check back soon.</div>';
     return;
@@ -725,10 +897,29 @@ function render(){
       <div class="tape"></div>
       <img src="${p.image_url}" alt="${escapeHtml(p.caption || 'artwork')}" style="cursor:zoom-in" data-fullimg="${p.image_url}" data-fullcap="${escapeHtml(p.caption || '')}">
       <div class="caption">${escapeHtml(p.caption || '')}</div>
-      <div class="meta">
+      
+      <div class="like-row">
+        <button class="like-btn" onclick="handleLike('${p.id}', ${p.likes || 0}, this)">
+          ${formatLikes(p.likes || 0)}
+        </button>
         <span class="date">${fmtDate(p.created_at)}</span>
-        ${unlocked ? `<button class="del-btn" data-id="${p.id}">delete</button>` : ''}
       </div>
+
+      ${activeCat === 'anime' ? `
+        <div class="download-box">
+          <div class="download-label">Download Post</div>
+          <div class="download-btns">
+            <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '1080p')">1080p</button>
+            <button class="dl-btn" onclick="triggerDownload('${p.image_url}', '720p')">720p</button>
+          </div>
+        </div>
+      ` : ''}
+
+      ${unlocked ? `
+        <div class="meta" style="margin-top:10px; border-top:1px solid rgba(201,162,39,0.1); padding-top:8px;">
+          <button class="del-btn" data-id="${p.id}">delete post</button>
+        </div>
+      ` : ''}
     `;
     grid.appendChild(card);
   });
@@ -887,7 +1078,13 @@ document.getElementById('uploadSubmit').addEventListener('click', async () => {
     imgInput.value = '';
     capInput.value = '';
     uploadOverlay.classList.add('hidden');
-    await loadPosts();
+    await 
+document.getElementById('searchBar').addEventListener('input', (e) => {
+  searchQuery = e.target.value;
+  render();
+});
+loadPosts();
+
     setActiveTab(category);
   }catch(e){
     const msg = (e && (e.message || e.error_description || e.hint || e.statusText)) || JSON.stringify(e);
@@ -960,7 +1157,13 @@ contactForm.addEventListener('submit', async (e) => {
   }
 });
 
+
+document.getElementById('searchBar').addEventListener('input', (e) => {
+  searchQuery = e.target.value;
+  render();
+});
 loadPosts();
+
 </script>
 
 </body>
