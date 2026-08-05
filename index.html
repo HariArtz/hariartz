@@ -1161,18 +1161,22 @@ function render(){
   grid.innerHTML = '';
   
   const searchContainer = document.getElementById('searchContainer');
-  if (activeCat === 'anime') {
+  const searchBar = document.getElementById('searchBar');
+  
+  if (activeCat === 'anime' || activeCat === 'artz') {
     searchContainer.classList.remove('hidden');
+    if(searchBar) {
+      searchBar.placeholder = activeCat === 'anime' ? "Search anime by description..." : "Search artz by description...";
+    }
   } else {
     searchContainer.classList.add('hidden');
     searchQuery = '';
-    const searchBar = document.getElementById('searchBar');
     if(searchBar) searchBar.value = '';
   }
 
   let filtered = posts.filter(p => p.category === activeCat);
   
-  if (activeCat === 'anime' && searchQuery) {
+  if (searchQuery) {
     const q = searchQuery.toLowerCase();
     filtered = filtered.filter(p => (p.caption || '').toLowerCase().includes(q));
   }
