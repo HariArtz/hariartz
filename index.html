@@ -571,6 +571,7 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
 }
 
+
 /* --- Artist Chronicle Styles --- */
 .chronicle-overlay {
   position: fixed;
@@ -578,65 +579,81 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   background: #000;
   z-index: 200;
   display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
+  padding: 10px;
 }
 .chronicle-overlay.visible {
   opacity: 1;
   pointer-events: auto;
 }
 .chronicle-container {
-  flex: 1;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 900px;
   position: relative;
   background: url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663874507612/GtJpKyPItOSUxFEz.png') no-repeat center center;
-  background-size: contain;
+  background-size: 100% 100%;
   aspect-ratio: 1448 / 1086;
   color: #fff;
+  box-shadow: 0 0 50px rgba(0,0,0,0.8);
 }
 .chronicle-interactive-layer {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 .chronicle-interactive-layer a, 
 .chronicle-interactive-layer span {
   pointer-events: auto;
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-/* Positioning based on the provided reference image layout */
-#chronicleInsta { top: 80%; left: 10%; width: 12%; height: 15%; }
-#chronicleMailBtn { top: 85%; left: 21.5%; width: 4.5%; height: 6%; }
+
+/* Positioning based on the background image layout */
+#chronicleInsta { 
+  top: 82%; left: 12%; width: 8%; height: 10%; 
+  z-index: 10;
+}
+#chronicleMailBtn { 
+  top: 82%; left: 21%; width: 8%; height: 10%; 
+  z-index: 10;
+}
 #artworkCount { 
-  top: 77.2%; left: 45.8%; 
-  font-family: 'Jost', sans-serif; font-size: 36px; font-weight: 700; color: var(--gold-bright);
-  background: #0a0908; 
-  min-width: 80px; text-align: left;
-  display: inline-block;
+  top: 76.5%; left: 45.5%; width: 15%; height: 8%;
+  font-family: 'Jost', sans-serif; 
+  font-size: clamp(14px, 4cqi, 36px); 
+  font-weight: 700; color: var(--gold-bright);
+  text-align: left;
+  justify-content: flex-start;
   z-index: 5;
 }
 #animeCount { 
-  top: 77.2%; left: 73.8%; 
-  font-family: 'Jost', sans-serif; font-size: 36px; font-weight: 700; color: var(--gold-bright);
-  background: #0a0908; 
-  min-width: 80px; text-align: left;
-  display: inline-block;
+  top: 76.5%; left: 73.5%; width: 15%; height: 8%;
+  font-family: 'Jost', sans-serif; 
+  font-size: clamp(14px, 4cqi, 36px); 
+  font-weight: 700; color: var(--gold-bright);
+  text-align: left;
+  justify-content: flex-start;
   z-index: 5;
 }
+
 .chronicle-close {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: -50px;
+  right: 0;
   background: rgba(0,0,0,0.5);
   border: 1px solid var(--gold);
   color: var(--gold-bright);
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   font-size: 20px;
   cursor: pointer;
@@ -645,173 +662,19 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   align-items: center;
   justify-content: center;
 }
-.chronicle-nav {
-  position: absolute;
-  top: 40px;
-  left: 40px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Great Vibes', cursive;
-  font-size: 32px;
-  color: var(--gold-bright);
+
+/* Container queries for font scaling */
+.chronicle-container {
+  container-type: size;
 }
-.chronicle-content {
-  max-width: 600px;
-  margin-bottom: 40px;
+
+@media (max-width: 600px) {
+  .chronicle-close {
+    top: 10px;
+    right: 10px;
+  }
 }
-.chronicle-name {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 72px;
-  font-weight: 900;
-  line-height: 1.1;
-  color: var(--gold-bright);
-  text-transform: uppercase;
-  margin-bottom: 5px;
-  text-shadow: 0 0 20px rgba(201,162,39,0.5);
-}
-.chronicle-sub {
-  font-family: 'Jost', sans-serif;
-  font-size: 20px;
-  letter-spacing: 4px;
-  color: var(--gold);
-  margin-bottom: 30px;
-}
-.chronicle-bio-box {
-  border-left: 2px solid var(--gold);
-  padding-left: 20px;
-  margin-bottom: 40px;
-  position: relative;
-}
-.chronicle-bio-box::before {
-  content: '"';
-  position: absolute;
-  left: -15px;
-  top: -10px;
-  font-size: 40px;
-  color: var(--gold);
-  font-family: serif;
-}
-.chronicle-bio {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px;
-  line-height: 1.4;
-  color: var(--cream);
-}
-.chronicle-stats-bar {
-  background: rgba(10, 9, 8, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--gold);
-  border-radius: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 1.2fr;
-  padding: 30px;
-  gap: 20px;
-}
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.stat-label {
-  font-family: 'Jost', sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--dim);
-}
-.stat-value-row {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.stat-icon {
-  font-size: 28px;
-  color: var(--gold-bright);
-}
-.stat-number {
-  font-family: 'Jost', sans-serif;
-  font-size: 32px;
-  font-weight: 600;
-  color: var(--gold-bright);
-}
-.stat-desc {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 14px;
-  color: var(--dim);
-}
-.chronicle-connect {
-  display: flex;
-  gap: 20px;
-}
-.connect-circle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gold-bright);
-  font-size: 20px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-}
-.connect-circle:hover {
-  background: var(--gold);
-  color: #000;
-  transform: translateY(-3px);
-}
-@media (max-width: 768px) {
-  .chronicle-name { font-size: 48px; }
-  .chronicle-stats-bar { grid-template-columns: 1fr; }
-  .chronicle-container { padding: 20px; }
-}
-.like-btn.animating {
-  animation: heartPop 0.45s ease-out;
-}
-@keyframes heartPop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.5); color: #ff4d4d; }
-  100% { transform: scale(1); }
-}
-.download-box {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border-top: 1px solid rgba(201,162,39,0.2);
-  padding-top: 10px;
-}
-.download-label {
-  font-family: 'Jost', sans-serif;
-  font-size: 10px;
-  color: var(--dim);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.download-btns {
-  display: flex;
-  gap: 8px;
-}
-.dl-btn {
-  flex: 1;
-  font-family: 'Jost', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 6px;
-  border: 1px solid var(--gold);
-  background: transparent;
-  color: var(--gold-bright);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-.dl-btn:hover {
-  background: var(--gold);
-  color: var(--bg);
-}
+
 
 /* Fix for transparent profile links */
 #chronicleInsta, #chronicleMailBtn {
@@ -1017,28 +880,23 @@ loadPosts = async function() {
 </div>
 
 <!-- Artist Chronicle Overlay -->
-<div class="chronicle-overlay" id="chronicleOverlay">
-  <button class="chronicle-close" id="closeChronicle">✕</button>
-  <div class="chronicle-container">
-    <div class="chronicle-interactive-layer">
-      <!-- Visible fallback link for Instagram -->
-      <div style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); z-index: 150; text-align: center; width: 100%;">
-        <a href="https://www.instagram.com/hari_.official_.2007/" target="_blank" rel="noopener noreferrer" 
-           style="color: var(--gold-bright); font-family: 'Jost', sans-serif; font-size: 14px; text-decoration: underline; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--gold);">
-           hari_.official_.2007
-        </a>
-      </div>
 
-      <!-- Social Links positioned over the image icons -->
+<div class="chronicle-overlay" id="chronicleOverlay">
+  <div class="chronicle-container">
+    <button class="chronicle-close" id="closeChronicle" aria-label="Close Profile">&times;</button>
+    
+    <div class="chronicle-interactive-layer">
+      <!-- Social Links -->
       <a href="https://www.instagram.com/hari_.official_.2007/" target="_blank" rel="noopener noreferrer" id="chronicleInsta" aria-label="hari_.official_.2007"></a>
       <a href="#contactSection" id="chronicleMailBtn" aria-label="Email"></a>
       
-      <!-- Dynamic counts positioned over the image numbers -->
+      <!-- Dynamic counts -->
       <span id="artworkCount">0</span>
       <span id="animeCount">0</span>
     </div>
   </div>
 </div>
+
 <script>
 const PASSKEY = "hariartzstudio@2007";
 const SUPABASE_URL = "https://jtvrlpyieshobkkhfrwi.supabase.co";
