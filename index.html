@@ -48,6 +48,12 @@ body{
     radial-gradient(ellipse 500px 500px at 80% 78%, rgba(232,199,102,0.20), transparent 60%);
   filter: blur(4px);
   animation: glowDrift 14s ease-in-out infinite alternate;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+  opacity: 0.7;
+}
+.glow-layer.active {
+  filter: blur(2px) brightness(1.4);
+  opacity: 1;
 }
 
 .glow-layer::after{
@@ -249,6 +255,7 @@ nav{
   transition: transform .12s ease, background .12s ease;
 }
 .pill:hover{ transform: translateY(-2px); }
+button.pill { cursor: pointer; }
 .pill.solid{
   background: linear-gradient(120deg, var(--gold), var(--gold-bright));
   color: #14110A;
@@ -559,6 +566,208 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
 .like-btn:hover {
   transform: scale(1.1);
 }
+.like-btn.liked {
+  color: #ff4d4d;
+  text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+}
+
+/* --- Artist Chronicle Styles --- */
+.chronicle-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.chronicle-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.chronicle-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  background: url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663874507612/GtJpKyPItOSUxFEz.png') no-repeat center center;
+  background-size: contain;
+  aspect-ratio: 1448 / 1086;
+  color: #fff;
+}
+.chronicle-interactive-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.chronicle-interactive-layer a, 
+.chronicle-interactive-layer span {
+  pointer-events: auto;
+  position: absolute;
+}
+/* Positioning based on the provided reference image layout */
+#chronicleInsta { top: 80%; left: 10%; width: 12%; height: 15%; }
+#chronicleMailBtn { top: 85%; left: 21.5%; width: 4.5%; height: 6%; }
+#artworkCount { 
+  top: 77.2%; left: 45.8%; 
+  font-family: 'Jost', sans-serif; font-size: 36px; font-weight: 700; color: var(--gold-bright);
+  background: #0a0908; 
+  min-width: 80px; text-align: left;
+  display: inline-block;
+  z-index: 5;
+}
+#animeCount { 
+  top: 77.2%; left: 73.8%; 
+  font-family: 'Jost', sans-serif; font-size: 36px; font-weight: 700; color: var(--gold-bright);
+  background: #0a0908; 
+  min-width: 80px; text-align: left;
+  display: inline-block;
+  z-index: 5;
+}
+.chronicle-close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chronicle-nav {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 32px;
+  color: var(--gold-bright);
+}
+.chronicle-content {
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+.chronicle-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  text-shadow: 0 0 20px rgba(201,162,39,0.5);
+}
+.chronicle-sub {
+  font-family: 'Jost', sans-serif;
+  font-size: 20px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  margin-bottom: 30px;
+}
+.chronicle-bio-box {
+  border-left: 2px solid var(--gold);
+  padding-left: 20px;
+  margin-bottom: 40px;
+  position: relative;
+}
+.chronicle-bio-box::before {
+  content: '"';
+  position: absolute;
+  left: -15px;
+  top: -10px;
+  font-size: 40px;
+  color: var(--gold);
+  font-family: serif;
+}
+.chronicle-bio {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--cream);
+}
+.chronicle-stats-bar {
+  background: rgba(10, 9, 8, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1.2fr;
+  padding: 30px;
+  gap: 20px;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.stat-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--dim);
+}
+.stat-value-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.stat-icon {
+  font-size: 28px;
+  color: var(--gold-bright);
+}
+.stat-number {
+  font-family: 'Jost', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--gold-bright);
+}
+.stat-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--dim);
+}
+.chronicle-connect {
+  display: flex;
+  gap: 20px;
+}
+.connect-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-bright);
+  font-size: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+.connect-circle:hover {
+  background: var(--gold);
+  color: #000;
+  transform: translateY(-3px);
+}
+@media (max-width: 768px) {
+  .chronicle-name { font-size: 48px; }
+  .chronicle-stats-bar { grid-template-columns: 1fr; }
+  .chronicle-container { padding: 20px; }
+}
 .like-btn.animating {
   animation: heartPop 0.45s ease-out;
 }
@@ -603,6 +812,19 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   background: var(--gold);
   color: var(--bg);
 }
+
+/* Fix for transparent profile links */
+#chronicleInsta, #chronicleMailBtn {
+    display: block !important;
+    z-index: 100 !important;
+    cursor: pointer !important;
+    background: transparent;
+    min-width: 44px;
+    min-height: 44px;
+}
+#chronicleInsta:hover, #chronicleMailBtn:hover {
+    background: rgba(201, 162, 39, 0.1);
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -627,7 +849,10 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
     <h1>Hari<br><span>Artz</span></h1>
     <p>Original artwork and anime fan posts, drawn, inked, and posted one page at a time.</p>
     <div class="contact-row">
-      <a class="pill" href="https://instagram.com/hari_.official_.2007" target="_blank" rel="noopener">📸 hari_.official_.2007</a>
+      <a class="pill" href="https://www.instagram.com/hari_.official_.2007/" target="_blank" rel="noopener">📸 hari_.official_.2007</a>
+      <button class="pill solid" id="openChronicleHero">
+        <span style="margin-right:8px;">🖋️</span> Artist Chronicle
+      </button>
       <a class="pill solid" id="mailBtn" href="mailto:hariartzstudio@gmail.com">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
           <defs>
@@ -649,6 +874,12 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
 <div class="quote-section">
   <div class="quote-rule"></div>
   <p class="quote-text">Life is a Canvas, if you're a master, you can create a Masterpiece.</p>
+</div>
+
+<div class="contact-row" style="margin-bottom: 30px;">
+  <button class="pill solid" id="openChronicleContact">
+    <span style="margin-right:8px;">🖋️</span> Artist Chronicle
+  </button>
 </div>
 
 <div class="quote-section" id="contactSection" style="max-width:480px; margin-top:60px;">
@@ -698,7 +929,7 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   </div>
   <div>
   Hari Artz &nbsp;·&nbsp;
-  <a href="https://instagram.com/hari_.official_.2007" target="_blank" rel="noopener">Instagram</a> &nbsp;·&nbsp;
+  <a href="https://www.instagram.com/hari_.official_.2007/" target="_blank" rel="noopener">hari_.official_.2007</a> &nbsp;·&nbsp;
   <a href="mailto:hariartzstudio@gmail.com" style="display:inline-flex; align-items:center; gap:5px;">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="#E8C766" stroke-width="2"/>
@@ -759,6 +990,29 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
   </div>
 </div>
 
+<!-- Artist Chronicle Overlay -->
+<div class="chronicle-overlay" id="chronicleOverlay">
+  <button class="chronicle-close" id="closeChronicle">✕</button>
+  <div class="chronicle-container">
+    <div class="chronicle-interactive-layer">
+      <!-- Visible fallback link for Instagram -->
+      <div style="position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); z-index: 150; text-align: center; width: 100%;">
+        <a href="https://www.instagram.com/hari_.official_.2007/" target="_blank" rel="noopener noreferrer" 
+           style="color: var(--gold-bright); font-family: 'Jost', sans-serif; font-size: 14px; text-decoration: underline; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--gold);">
+           hari_.official_.2007
+        </a>
+      </div>
+
+      <!-- Social Links positioned over the image icons -->
+      <a href="https://www.instagram.com/hari_.official_.2007/" target="_blank" rel="noopener noreferrer" id="chronicleInsta" aria-label="hari_.official_.2007"></a>
+      <a href="#contactSection" id="chronicleMailBtn" aria-label="Email"></a>
+      
+      <!-- Dynamic counts positioned over the image numbers -->
+      <span id="artworkCount">0</span>
+      <span id="animeCount">0</span>
+    </div>
+  </div>
+</div>
 <script>
 const PASSKEY = "hariartzstudio@2007";
 const SUPABASE_URL = "https://jtvrlpyieshobkkhfrwi.supabase.co";
@@ -768,28 +1022,54 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let searchQuery = '';
 
 function formatLikes(count) {
-  const n = count || 0;
-  if (n >= 1000000) return `❤️${(n / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (n >= 1000) return `❤️${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
-  return `❤️${n}`;
+  const n = parseInt(count) || 0;
+  let displayCount = n;
+  if (n >= 1000000) displayCount = (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  else if (n >= 1000) displayCount = (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+  return `❤️ ${displayCount}`;
 }
 
-async function handleLike(postId, currentLikes, btnEl) {
+async function handleLike(postId, btnEl) {
   if (btnEl.classList.contains('animating')) return;
-  
-  const newLikes = (currentLikes || 0) + 1;
   btnEl.classList.add('animating');
+
+  const post = posts.find(p => String(p.id) === String(postId));
+  if (!post) return;
+
+  let likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+  const isAlreadyLiked = likedPosts.includes(String(postId));
+  
+  // Toggle logic
+  const originalLikes = post.likes || 0;
+  const newLikes = isAlreadyLiked ? Math.max(0, originalLikes - 1) : originalLikes + 1;
+  
+  // Optimistic Update UI
+  post.likes = newLikes;
+  if (isAlreadyLiked) {
+    likedPosts = likedPosts.filter(id => id !== String(postId));
+    btnEl.classList.remove('liked');
+  } else {
+    likedPosts.push(String(postId));
+    btnEl.classList.add('liked');
+  }
   btnEl.innerHTML = formatLikes(newLikes);
-  
-  const post = posts.find(p => p.id === postId);
-  if (post) post.likes = newLikes;
-  
+  localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
+
   try {
+    // Update Supabase
     const { error } = await supabaseClient
       .from('posts')
       .update({ likes: newLikes })
       .eq('id', postId);
-    if (error) console.error('Supabase like error:', error);
+      
+    if (error) {
+      console.error('Supabase like error:', error);
+      // Revert if database update fails (likely due to RLS)
+      post.likes = originalLikes;
+      localStorage.setItem('likedPosts', JSON.stringify(isAlreadyLiked ? [...likedPosts, String(postId)] : likedPosts.filter(id => id !== String(postId))));
+      render(); // Re-render to show original state
+      alert("Note: Could not save like to database. Please ensure your Supabase table 'posts' has a 'likes' column and public Update permissions (RLS) are enabled.");
+    }
   } catch (err) {
     console.error('Like error:', err);
   }
@@ -854,6 +1134,7 @@ async function loadPosts(){
     if(error) throw error;
     posts = data || [];
     render();
+    if(typeof updateChronicleStats === 'function') updateChronicleStats();
   }catch(e){
     const msg = (e && (e.message || e.error_description || e.hint)) || JSON.stringify(e);
     console.error('Load error:', msg, e);
@@ -890,7 +1171,10 @@ function render(){
     grid.innerHTML = '<div class="empty-state">Nothing posted here yet — check back soon.</div>';
     return;
   }
+  const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+  
   filtered.forEach(p => {
+    const isLiked = likedPosts.includes(String(p.id));
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
@@ -899,7 +1183,7 @@ function render(){
       <div class="caption">${escapeHtml(p.caption || '')}</div>
       
       <div class="like-row">
-        <button class="like-btn" onclick="handleLike('${p.id}', ${p.likes || 0}, this)">
+        <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="handleLike('${p.id}', this)">
           ${formatLikes(p.likes || 0)}
         </button>
         <span class="date">${fmtDate(p.created_at)}</span>
@@ -955,17 +1239,56 @@ function escapeHtml(str){
   return div.innerHTML;
 }
 
+function updateChronicleStats() {
+  const artzCount = posts.filter(p => p.category === 'artz').length;
+  const animeCount = posts.filter(p => p.category === 'anime').length;
+  document.getElementById('artworkCount').textContent = artzCount;
+  document.getElementById('animeCount').textContent = animeCount;
+}
+
 function setActiveTab(cat){
   activeCat = cat;
   tabAnime.classList.toggle('active', cat === 'anime');
   tabArtz.classList.toggle('active', cat === 'artz');
   sectionLabel.textContent = cat === 'anime' ? 'Anime Posts' : 'Hari Artz';
   render();
+  updateChronicleStats();
 }
+
+const chronicleOverlay = document.getElementById('chronicleOverlay');
+const openChronicleHero = document.getElementById('openChronicleHero');
+const openChronicleContact = document.getElementById('openChronicleContact');
+const closeChronicle = document.getElementById('closeChronicle');
+const chronicleMailBtn = document.getElementById('chronicleMailBtn');
+
+function toggleChronicle(show) {
+  if (show) {
+    updateChronicleStats();
+    chronicleOverlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  } else {
+    chronicleOverlay.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+}
+
+openChronicleHero.addEventListener('click', () => toggleChronicle(true));
+openChronicleContact.addEventListener('click', () => toggleChronicle(true));
+closeChronicle.addEventListener('click', () => toggleChronicle(false));
+
+chronicleMailBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  toggleChronicle(false);
+  setTimeout(() => {
+    const contactSection = document.getElementById('contactSection');
+    contactSection.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('cfEmail').focus();
+  }, 400);
+});
 
 tabAnime.addEventListener('click', () => setActiveTab('anime'));
 tabArtz.addEventListener('click', () => setActiveTab('artz'));
-document.getElementById('logoBtn').addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+document.getElementById('logoBtn').addEventListener('click', () => toggleChronicle(true));
 
 lockBtn.addEventListener('click', () => {
   if(unlocked){
@@ -1078,13 +1401,7 @@ document.getElementById('uploadSubmit').addEventListener('click', async () => {
     imgInput.value = '';
     capInput.value = '';
     uploadOverlay.classList.add('hidden');
-    await 
-document.getElementById('searchBar').addEventListener('input', (e) => {
-  searchQuery = e.target.value;
-  render();
-});
-loadPosts();
-
+    await loadPosts();
     setActiveTab(category);
   }catch(e){
     const msg = (e && (e.message || e.error_description || e.hint || e.statusText)) || JSON.stringify(e);
@@ -1164,7 +1481,18 @@ document.getElementById('searchBar').addEventListener('input', (e) => {
 });
 loadPosts();
 
+const glowLayer = document.querySelector('.glow-layer');
+let scrollTimer;
+window.addEventListener('scroll', () => {
+  glowLayer.classList.add('active');
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => glowLayer.classList.remove('active'), 200);
+});
+
+window.addEventListener('mousedown', () => glowLayer.classList.add('active'));
+window.addEventListener('mouseup', () => glowLayer.classList.remove('active'));
 </script>
+
 
 </body>
 </html>
