@@ -826,7 +826,33 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
     background: rgba(201, 162, 39, 0.1);
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js">
+// Subscribe to real-time changes
+function subscribeToLikes() {
+  supabaseClient
+    .channel('public:posts')
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, payload => {
+      const updatedPost = payload.new;
+      const index = posts.findIndex(p => String(p.id) === String(updatedPost.id));
+      if (index !== -1) {
+        posts[index].likes = updatedPost.likes;
+        // Update the specific button in the UI without full re-render
+        const likeBtns = document.querySelectorAll(`button[onclick*="handleLike('${updatedPost.id}'"]`);
+        likeBtns.forEach(btn => {
+          btn.innerHTML = formatLikes(updatedPost.likes);
+        });
+      }
+    })
+    .subscribe();
+}
+
+// Call subscription after initial load
+const originalLoadPosts = loadPosts;
+loadPosts = async function() {
+  await originalLoadPosts();
+  subscribeToLikes();
+};
+</script>
 </head>
 <body>
 <div class="glow-layer" aria-hidden="true"></div>
@@ -1039,12 +1065,7 @@ async function handleLike(postId, btnEl) {
   let likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
   const isAlreadyLiked = likedPosts.includes(String(postId));
   
-  // Toggle logic
-  const originalLikes = post.likes || 0;
-  const newLikes = isAlreadyLiked ? Math.max(0, originalLikes - 1) : originalLikes + 1;
-  
-  // Optimistic Update UI
-  post.likes = newLikes;
+  // Optimistic UI Update (Local only)
   if (isAlreadyLiked) {
     likedPosts = likedPosts.filter(id => id !== String(postId));
     btnEl.classList.remove('liked');
@@ -1052,23 +1073,18 @@ async function handleLike(postId, btnEl) {
     likedPosts.push(String(postId));
     btnEl.classList.add('liked');
   }
-  btnEl.innerHTML = formatLikes(newLikes);
   localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
 
   try {
-    // Update Supabase
-    const { error } = await supabaseClient
-      .from('posts')
-      .update({ likes: newLikes })
-      .eq('id', postId);
+    // Use RPC for atomic increment/decrement to avoid race conditions
+    const functionName = isAlreadyLiked ? 'decrement_likes' : 'increment_likes';
+    const { data, error } = await supabaseClient.rpc(functionName, { post_id: postId });
       
     if (error) {
-      console.error('Supabase like error:', error);
-      // Revert if database update fails (likely due to RLS)
-      post.likes = originalLikes;
-      localStorage.setItem('likedPosts', JSON.stringify(isAlreadyLiked ? [...likedPosts, String(postId)] : likedPosts.filter(id => id !== String(postId))));
-      render(); // Re-render to show original state
-      alert("Note: Could not save like to database. Please ensure your Supabase table 'posts' has a 'likes' column and public Update permissions (RLS) are enabled.");
+      console.error('Supabase RPC error:', error);
+      // Fallback to old update method if RPC is not set up yet
+      const newCount = isAlreadyLiked ? Math.max(0, (post.likes || 0) - 1) : (post.likes || 0) + 1;
+      await supabaseClient.from('posts').update({ likes: newCount }).eq('id', postId);
     }
   } catch (err) {
     console.error('Like error:', err);
@@ -1491,6 +1507,32 @@ window.addEventListener('scroll', () => {
 
 window.addEventListener('mousedown', () => glowLayer.classList.add('active'));
 window.addEventListener('mouseup', () => glowLayer.classList.remove('active'));
+
+// Subscribe to real-time changes
+function subscribeToLikes() {
+  supabaseClient
+    .channel('public:posts')
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, payload => {
+      const updatedPost = payload.new;
+      const index = posts.findIndex(p => String(p.id) === String(updatedPost.id));
+      if (index !== -1) {
+        posts[index].likes = updatedPost.likes;
+        // Update the specific button in the UI without full re-render
+        const likeBtns = document.querySelectorAll(`button[onclick*="handleLike('${updatedPost.id}'"]`);
+        likeBtns.forEach(btn => {
+          btn.innerHTML = formatLikes(updatedPost.likes);
+        });
+      }
+    })
+    .subscribe();
+}
+
+// Call subscription after initial load
+const originalLoadPosts = loadPosts;
+loadPosts = async function() {
+  await originalLoadPosts();
+  subscribeToLikes();
+};
 </script>
 
 
