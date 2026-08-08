@@ -787,33 +787,7 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
 }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js">
-// Subscribe to real-time changes
-function subscribeToLikes() {
-  supabaseClient
-    .channel('public:posts')
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, payload => {
-      const updatedPost = payload.new;
-      const index = posts.findIndex(p => String(p.id) === String(updatedPost.id));
-      if (index !== -1) {
-        posts[index].likes = updatedPost.likes;
-        // Update the specific button in the UI without full re-render
-        const likeBtns = document.querySelectorAll(`button[onclick*="handleLike('${updatedPost.id}'"]`);
-        likeBtns.forEach(btn => {
-          btn.innerHTML = formatLikes(updatedPost.likes);
-        });
-      }
-    })
-    .subscribe();
-}
-
-// Call subscription after initial load
-const originalLoadPosts = loadPosts;
-loadPosts = async function() {
-  await originalLoadPosts();
-  subscribeToLikes();
-};
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 <div class="glow-layer" aria-hidden="true"></div>
@@ -1487,7 +1461,9 @@ document.getElementById('searchBar').addEventListener('input', (e) => {
   searchQuery = e.target.value;
   render();
 });
-loadPosts();
+loadPosts().then(() => {
+  subscribeToLikes();
+});
 
 const glowLayer = document.querySelector('.glow-layer');
 let scrollTimer;
@@ -1518,13 +1494,6 @@ function subscribeToLikes() {
     })
     .subscribe();
 }
-
-// Call subscription after initial load
-const originalLoadPosts = loadPosts;
-loadPosts = async function() {
-  await originalLoadPosts();
-  subscribeToLikes();
-};
 </script>
 
 
