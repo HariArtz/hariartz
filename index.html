@@ -958,15 +958,19 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
 
 <div class="overlay hidden" id="lockOverlay">
   <div class="modal" id="lockModal">
-    <h2>Unlock uploads</h2>
+    <h2>Administrator login</h2>
     <div class="field">
-      <label for="passkeyInput">Passkey</label>
-      <input type="password" id="passkeyInput" placeholder="Enter your passkey">
+      <label for="adminEmail">Email</label>
+      <input type="email" id="adminEmail" value="hariartzstudio@gmail.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="adminPassword">Password</label>
+      <input type="password" id="adminPassword" placeholder="Enter your Supabase password" autocomplete="current-password">
     </div>
     <div class="error-msg" id="lockError"></div>
     <div class="modal-actions">
       <button class="btn secondary" id="lockCancel">Cancel</button>
-      <button class="btn" id="lockSubmit">Unlock</button>
+      <button class="btn" id="lockSubmit">Log in</button>
     </div>
   </div>
 </div>
@@ -1008,9 +1012,8 @@ footer a{ text-decoration: underline; color: var(--gold-bright); }
 
 
 <script>
-const PASSKEY = "hariartzstudio@2007";
-const SUPABASE_URL = "https://jtvrlpyieshobkkhfrwi.supabase.co";
-const SUPABASE_KEY = "sb_publishable_3z-ZSkXNDM497O_SQjiAmA_L6S_dtCl";
+const SUPABASE_URL = "https://mxxmooakselpxsfjqtto.supabase.co";
+const SUPABASE_KEY = "sb_publishable_wX17MD6_VS4TPWxn6MFkEw_1bFr9pZw";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let searchQuery = '';
@@ -1087,7 +1090,7 @@ function triggerDownload(url, quality) {
   img.src = url;
 }
 
-const BUCKET = "post-images";
+const BUCKET = "artwork-images";
 let posts = [];
 let activeCat = "anime";
 let unlocked = false;
@@ -1099,7 +1102,8 @@ const tabArtz = document.getElementById('tabArtz');
 const lockBtn = document.getElementById('lockBtn');
 
 const lockOverlay = document.getElementById('lockOverlay');
-const passkeyInput = document.getElementById('passkeyInput');
+const adminEmailInput = document.getElementById('adminEmail');
+const adminPasswordInput = document.getElementById('adminPassword');
 const lockError = document.getElementById('lockError');
 const lockModal = document.getElementById('lockModal');
 
@@ -1272,14 +1276,28 @@ if (openChronicleHero) openChronicleHero.addEventListener('click', () => setActi
 if (openChronicleContact) openChronicleContact.addEventListener('click', () => setActiveTab('profile'));
 
 
-lockBtn.addEventListener('click', () => {
-  if(unlocked){
+async function syncAdminSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  unlocked = !!session && session.user.email?.toLowerCase() === 'hariartzstudio@gmail.com';
+  lockBtn.textContent = unlocked ? '🔓' : '🔒';
+}
+
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  unlocked = !!session && session.user.email?.toLowerCase() === 'hariartzstudio@gmail.com';
+  lockBtn.textContent = unlocked ? '🔓' : '🔒';
+  if (!unlocked) uploadOverlay.classList.add('hidden');
+});
+
+lockBtn.addEventListener('click', async () => {
+  await syncAdminSession();
+  if (unlocked) {
     uploadOverlay.classList.remove('hidden');
-  }else{
+  } else {
     lockOverlay.classList.remove('hidden');
-    passkeyInput.value = '';
+    adminEmailInput.value = 'hariartzstudio@gmail.com';
+    adminPasswordInput.value = '';
     lockError.textContent = '';
-    passkeyInput.focus();
+    adminPasswordInput.focus();
   }
 });
 
@@ -1287,20 +1305,45 @@ document.getElementById('lockCancel').addEventListener('click', () => lockOverla
 lockOverlay.addEventListener('click', (e) => { if(e.target === lockOverlay) lockOverlay.classList.add('hidden'); });
 
 document.getElementById('lockSubmit').addEventListener('click', tryUnlock);
-passkeyInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryUnlock(); });
+adminPasswordInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryUnlock(); });
 
-function tryUnlock(){
-  if(passkeyInput.value === PASSKEY){
+async function tryUnlock() {
+  const email = adminEmailInput.value.trim().toLowerCase();
+  const password = adminPasswordInput.value;
+  lockError.textContent = '';
+
+  if (email !== 'hariartzstudio@gmail.com') {
+    lockError.textContent = 'This email is not authorized for administrator login.';
+    return;
+  }
+  if (!password) {
+    lockError.textContent = 'Please enter your password.';
+    return;
+  }
+
+  const submit = document.getElementById('lockSubmit');
+  submit.disabled = true;
+  submit.textContent = 'Signing in...';
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    if (!data.user || data.user.id !== 'f6ec5543-db54-442d-98a3-fc7f7aea55b1') {
+      await supabaseClient.auth.signOut();
+      throw new Error('This account does not have administrator access.');
+    }
     unlocked = true;
     lockBtn.textContent = '🔓';
     lockOverlay.classList.add('hidden');
+    adminPasswordInput.value = '';
     uploadOverlay.classList.remove('hidden');
-    render();
-  }else{
-    lockError.textContent = 'Wrong passkey — try again.';
+  } catch (err) {
+    lockError.textContent = err.message || 'Login failed. Please try again.';
     lockModal.classList.remove('shake');
     void lockModal.offsetWidth;
     lockModal.classList.add('shake');
+  } finally {
+    submit.disabled = false;
+    submit.textContent = 'Log in';
   }
 }
 
@@ -1461,6 +1504,7 @@ document.getElementById('searchBar').addEventListener('input', (e) => {
   searchQuery = e.target.value;
   render();
 });
+syncAdminSession();
 loadPosts().then(() => {
   subscribeToLikes();
 });
